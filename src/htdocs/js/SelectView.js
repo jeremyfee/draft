@@ -57,6 +57,24 @@ define([
 		this._collection.select(selected);
 	};
 
+	SelectView.prototype.getValue = function () {
+		var select = this._select,
+			collection = this._collection.data(),
+			value,
+			i, len;
+		if (this._options.multiSelect === true) {
+			value = [];
+			for (i = 0, len = select.length; i < len; i++) {
+				if (select[i].selected) {
+					value.push(collection[select[i].value]);
+				}
+			}
+		} else {
+			value = collection[select.value];
+		}
+		return value;
+	};
+
 
 	return SelectView;
 
