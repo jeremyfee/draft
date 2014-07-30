@@ -51,11 +51,25 @@ define([
 			format: formatTeam
 		});
 
+		this._fromPicks = new SelectView({
+			collection: new Collection(),
+			el: el.querySelector('.frompicks'),
+			format: this._formatPick,
+			multiSelect: true
+		});
+		this._toPicks = new SelectView({
+			collection: new Collection(),
+			el: el.querySelector('.topicks'),
+			format: this._formatPick,
+			multiSelect: true
+		});
+
 		this._from.on('select', this._onFromChange, this);
 		this._to.on('select', this._onToChange, this);
 		league.on('reset', function () {
 			league.select(league.data()[0]);
 		}.bind(this));
+		this._onFromChange();
 	};
 
 	LeagueView.prototype._formatPick = function (pick) {
@@ -80,33 +94,17 @@ define([
 			this._to._collection.select(teams[0]);
 		}
 
-		// TODO: show from picks
 		if (fromTeam) {
-			this._el.querySelector('.frompicks').innerHTML = '' +
-					fromTeam.name + ' picks';
-			new SelectView({
-				el: this._el.querySelector('.frompicks').appendChild(
-						document.createElement('div')),
-				collection: fromTeam.picks,
-				format: this._formatPick,
-				multiSelect: true
-			});
+			this._fromPicks._collection.reset(fromTeam.picks.data());
 		}
-
 	};
 
-	LeagueView.prototype._onToChange = function (team) {
+	LeagueView.prototype._onToChange = function () {
+		var team = this._to._collection.getSelected();
+
 		// TODO: show to picks
 		if (team) {
-			this._el.querySelector('.topicks').innerHTML = '' +
-					team.name + ' picks';
-			new SelectView({
-				el: this._el.querySelector('.topicks').appendChild(
-						document.createElement('div')),
-				collection: team.picks,
-				format: this._formatPick,
-				multiSelect: true
-			});
+			this._toPicks._collection.reset(team.picks.data());
 		}
 	};
 
