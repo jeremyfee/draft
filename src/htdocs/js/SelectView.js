@@ -44,6 +44,10 @@ define([
 				'</option>');
 		}
 		this._select.innerHTML = buf.join('');
+
+		if (this._options.multiSelect === true) {
+			this._select.setAttribute('size', len);
+		}
 	};
 
 	SelectView.prototype._onSelect = function (e) {
