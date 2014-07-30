@@ -12,8 +12,7 @@ h1 {
 .league {
 	> section {
 		float:left;
-		width: 50%;
-		padding-right:1em;
+		padding-right:2em;
 	}
 
 	&:after {
@@ -22,4 +21,3 @@ h1 {
 		clear:left;
 	}
 }
-
