@@ -20,6 +20,8 @@ define([
 	LeagueView.prototype._initialize = function () {
 		var el = this._el;
 
+		this._formatPick = this._formatPick.bind(this);
+
 		this._league = this._options.league;
 		this._league.on('reset', this.render, this);
 
@@ -55,6 +57,11 @@ define([
 		}.bind(this));
 	};
 
+	LeagueView.prototype._formatPick = function (pick) {
+		var team = this._league.get(pick.teamid);
+		return team.owner + ' - round ' + pick.round;
+	};
+
 	LeagueView.prototype._onFromChange = function () {
 		var league = this._league.data(),
 		    fromTeam = this._from._collection.getSelected(),
@@ -79,20 +86,8 @@ define([
 			new SelectView({
 				el: this._el.querySelector('.frompicks').appendChild(
 						document.createElement('div')),
-				// todo, use fromTeam picks collection
-				collection: new Collection([
-					{id: 1, name: 'Pick 1'},
-					{id: 2, name: 'Pick 2'},
-					{id: 3, name: 'Pick 3'},
-					{id: 4, name: 'Pick 4'},
-					{id: 5, name: 'Pick 5'},
-					{id: 6, name: 'Pick 6'},
-					{id: 7, name: 'Pick 7'},
-					{id: 8, name: 'Pick 8'}
-				]),
-				format: function (pick) {
-					return pick.name;
-				},
+				collection: fromTeam.picks,
+				format: this._formatPick,
 				multiSelect: true
 			});
 		}
@@ -101,26 +96,14 @@ define([
 
 	LeagueView.prototype._onToChange = function (team) {
 		// TODO: show to picks
-		this._el.querySelector('.topicks').innerHTML = '' +
-				team.name + ' picks';
 		if (team) {
+			this._el.querySelector('.topicks').innerHTML = '' +
+					team.name + ' picks';
 			new SelectView({
 				el: this._el.querySelector('.topicks').appendChild(
 						document.createElement('div')),
-				// todo, use fromTeam picks collection
-				collection: new Collection([
-					{id: 1, name: 'Pick 1'},
-					{id: 2, name: 'Pick 2'},
-					{id: 3, name: 'Pick 3'},
-					{id: 4, name: 'Pick 4'},
-					{id: 5, name: 'Pick 5'},
-					{id: 6, name: 'Pick 6'},
-					{id: 7, name: 'Pick 7'},
-					{id: 8, name: 'Pick 8'}
-				]),
-				format: function (pick) {
-					return pick.name;
-				},
+				collection: team.picks,
+				format: this._formatPick,
 				multiSelect: true
 			});
 		}
