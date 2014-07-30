@@ -34,6 +34,10 @@ define([
 			'<section>' +
 				'<div class="to"></div>' +
 				'<div class="topicks"></div>' +
+			'</section>' +
+			'<section>' +
+				'<textarea class="comment"></textarea>' +
+				'<button class="trade">Trade</button>' +
 			'</section>';
 
 		this._from = new SelectView({
@@ -65,6 +69,12 @@ define([
 		league.on('reset', function () {
 			league.select(league.data()[0]);
 		}.bind(this));
+
+		this._comment = el.querySelector('.comment');
+		this._trade = el.querySelector('.trade');
+		this._trade.addEventListener('click',
+			this._onTrade.bind(this));
+
 		this._onFromChange();
 	};
 
@@ -108,6 +118,45 @@ define([
 		}
 	};
 
+	LeagueView.prototype._onTrade = function () {
+		var now = new Date().getTime(),
+			comment = this._comment.value,
+			fromTeam = this._from._collection.getSelected(),
+			toTeam = this._to._collection.getSelected(),
+		    fromPicks = this._fromPicks.getValue(),
+		    toPicks = this._toPicks.getValue();
+
+		fromPicks.forEach(function (value) {
+			value.history.push({
+				time: now,
+				teamid: toTeam.id,
+				comment: comment
+			});
+		});
+
+		toPicks.forEach(function (value) {
+			value.history.push({
+				time: now,
+				teamid: fromTeam.id,
+				comment: comment
+			});
+		});
+
+		fromTeam.picks.remove.apply(fromTeam.picks, fromPicks);
+		toTeam.picks.remove.apply(toTeam.picks, toPicks);
+
+		fromTeam.picks.add.apply(fromTeam.picks, toPicks);
+		toTeam.picks.add.apply(toTeam.picks, fromPicks);
+
+		function sortByRound(a, b) {
+			return a.round - b.round;
+		}
+
+		fromTeam.picks.sort(sortByRound);
+		toTeam.picks.sort(sortByRound);
+
+		fromTeam.picks.trigger('change');
+	};
 
 	LeagueView.prototype.render = function () {
 	};
