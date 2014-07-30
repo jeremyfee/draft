@@ -21,6 +21,7 @@ define([
 		var el = this._el,
 			league;
 
+		this._formatTeam = this._formatTeam.bind(this);
 		this._formatPick = this._formatPick.bind(this);
 
 		league = this._league = this._options.league;
@@ -35,20 +36,15 @@ define([
 				'<div class="topicks"></div>' +
 			'</section>';
 
-		var formatTeam = function (team) {
-			return team.name +
-					' (' + team.owner + ')';
-		};
-
 		this._from = new SelectView({
 			collection: this._league,
 			el: el.querySelector('.from'),
-			format: formatTeam
+			format: this._formatTeam
 		});
 		this._to = new SelectView({
 			collection: new Collection(),
 			el: el.querySelector('.to'),
-			format: formatTeam
+			format: this._formatTeam
 		});
 
 		this._fromPicks = new SelectView({
@@ -70,6 +66,10 @@ define([
 			league.select(league.data()[0]);
 		}.bind(this));
 		this._onFromChange();
+	};
+
+	LeagueView.prototype._formatTeam = function (team) {
+		return team.owner + ' (' + team.name + ')';
 	};
 
 	LeagueView.prototype._formatPick = function (pick) {
