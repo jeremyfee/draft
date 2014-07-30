@@ -155,7 +155,7 @@ define([
 		fromTeam.picks.sort(sortByRound);
 		toTeam.picks.sort(sortByRound);
 
-		fromTeam.picks.trigger('change');
+		this._league.trigger('select');
 	};
 
 	LeagueView.prototype.render = function () {
