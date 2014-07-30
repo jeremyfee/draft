@@ -46,9 +46,13 @@ define([
 		});
 	};
 
-	DraftApplication.prototype._load = function (data) {
-		console.log(data[0]);
-		this._league.reset(data);
+	DraftApplication.prototype._load = function (teams) {
+		var team, i, len;
+		for (i = 0, len = teams.length; i < len; i++) {
+			team = teams[i];
+			team.picks = new Collection(team.data.picks);
+		}
+		this._league.reset(teams);
 	};
 
 	DraftApplication.prototype._loadError = function () {
