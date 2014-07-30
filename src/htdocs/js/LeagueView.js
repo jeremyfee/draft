@@ -74,7 +74,7 @@ define([
 
 	LeagueView.prototype._formatPick = function (pick) {
 		var team = this._league.get(pick.teamid);
-		return team.owner + ' - round ' + pick.round;
+		return 'Round ' + pick.round + ' (' + team.owner + ')';
 	};
 
 	LeagueView.prototype._onFromChange = function () {
