@@ -18,12 +18,13 @@ define([
 	LeagueView.prototype = Object.create(View.prototype);
 
 	LeagueView.prototype._initialize = function () {
-		var el = this._el;
+		var el = this._el,
+			league;
 
 		this._formatPick = this._formatPick.bind(this);
 
-		this._league = this._options.league;
-		this._league.on('reset', this.render, this);
+		league = this._league = this._options.league;
+		league.on('reset', this.render, this);
 
 		el.innerHTML = '<section>' +
 				'<div class="from"></div>' +
@@ -52,8 +53,8 @@ define([
 
 		this._from.on('select', this._onFromChange, this);
 		this._to.on('select', this._onToChange, this);
-		this._league.on('reset', function () {
-			this._league.select(this._league.data()[0]);
+		league.on('reset', function () {
+			league.select(league.data()[0]);
 		}.bind(this));
 	};
 
